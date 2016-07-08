@@ -141,6 +141,6 @@
         (in-hole P (Σ number ...))
         "+")
    
-   (--> (e_1 ... (in-hole E (amb e_2 ...)) e_3 ...)
+   (--> (e_1 ... (in-hole E (amb t e_2 ...)) e_3 ...)
         (e_1 ... (in-hole E e_2) ... e_3 ...)
         "amb")))
