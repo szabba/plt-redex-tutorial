@@ -15,17 +15,6 @@
   [t (→ t t) num]
   [x variable-not-otherwise-mentioned])
 
-(define (EXERCISE n )
-  (newline)
-  (display "#")
-  (newline)
-  (display "# EXERCISE ")
-  (display n)
-  (newline)
-  (display "#")
-  (newline)
-  (newline))
-
 (define-extended-language L+Γ L
   [Γ · (x : t Γ)])
 
