@@ -144,3 +144,51 @@
    (--> (e_1 ... (in-hole E (amb t e_2 ...)) e_3 ...)
         (e_1 ... (in-hole E e_2) ... e_3 ...)
         "amb")))
+
+(define (progress-holds? e)
+  (if (types? e)
+      (or (v? e)
+          (reduces? e))
+      #t))
+
+(define (types? e)
+  (= (length (judgment-holds (types · ,e t) t))
+     1))
+
+(define v? (redex-match Ev v))
+
+(define (reduces? e)
+  (not (null? (apply-reduction-relation
+               red
+               (term (,e))))))
+
+(define (preservation-holds? e)
+  (let [(e-types
+         (judgment-holds
+          (types · ,e t)
+          t))]
+    (cond [(not (null? e-types))
+           (let* [(e-reduced
+                   (append*
+                    (apply-reduction-relation
+                     red
+                     (term (,e)))))
+                  (e-reduced-types
+                   (append*
+                    (map
+                     (λ (e-reduced)
+                       (if (not (null? e-reduced))
+                           (judgment-holds
+                            (types · ,e-reduced t)
+                            t)
+                           (list)))
+                     e-reduced)))]
+             (cond [(not (null? e-reduced-types))
+                    (equal?
+                     (remove-duplicates e-types)
+                     (remove-duplicates e-reduced-types))]
+                   [else #t]))]
+          [else #t])))
+
+(redex-check Ev e (progress-holds? (term e)))
+(redex-check Ev e (preservation-holds? (term e)))
